@@ -1,0 +1,56 @@
+#include<stdio.h>
+#include<stdlib.h>
+#define N 8
+typedef struct node node;
+struct node
+{
+int count;
+node *next;
+};
+node graph[N];
+void buildGraph(int a[][2],int edges)
+{
+int i;
+for(i=0;i<N;++i)
+{
+graph[i].count=0;
+graph[i].next=NULL;
+}
+for(i=0;i<edges;++i)
+{
+node *ptr=(node *) malloc(sizeof(node));
+ptr->count=a[i][1];
+ptr->next=graph[a[i][0]].next;
+graph[a[i][0]].next=ptr;
+graph[a[i][1]].count++;
+}
+}
+void printGraph()
+{
+int i;
+node *ptr;
+for(i=0;i<N;++i)
+{
+node *ptr;
+printf("%d:pred=%d:connected to",i,graph[i].count);
+for(ptr=graph[i].next;ptr;ptr=ptr->next)
+printf("%d",ptr->count);
+printf("\n");
+}
+}
+int main()
+{
+int a[8][2],i,j;
+printf("\n\nEnter the edges b/w nodes\n");
+for(i=0;i<8;i++)
+{
+for(j=0;j<2;j++)
+{
+scanf("%d",&a[i][j]);
+}
+}
+buildGraph(a,8);
+printf("\nThe DAG for (a+b)*c+((a+b)+e):\n\n");
+printGraph();
+}
+
