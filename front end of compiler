@@ -1,0 +1,97 @@
+#include<stdio.h>
+#include<conio.h>
+#include<ctype.h>
+#include<string.h>
+char expr[100];
+int tmpno=1;
+int isopr(int prt)
+{
+char a=expr[prt];
+if(a=='+'||a=='-'||a=='*'||a=='/'||
+a=='('||a==')'||a=='='||a=='\0')
+return 1;
+else
+return 0;
+}
+void compute(int start, int end)
+{
+int ptr,oprpos,stpos,endpos,i,j,blen,nlen,p;
+char buff[100]="\0",cno[5],opr[]={'*','/','-','+'};
+for(p=0;p<4;p++)
+{
+for(ptr=start;ptr<=end;ptr++)
+{
+if(expr[ptr]==opr[p])
+{
+oprpos=ptr;
+ptr--;
+while(!isopr(ptr)) ptr--;
+stpos=ptr+1;
+ptr=oprpos;
+ptr++;
+while(!isopr(ptr)) ptr++;
+endpos=ptr-1;
+printf("\nt%d = ",tmpno);
+
+for(i=stpos;i<=endpos;i++)
+printf("%c",expr[i]);
+if(expr[stpos-1]=='(' && expr[endpos+1]==')')
+{
+stpos--;
+endpos++;
+end=start;
+}
+strncat(buff,expr,stpos);
+buff[stpos]='t';
+buff[stpos+1]='\0';
+itoa(tmpno,cno,10);
+strcat(buff,cno);
+blen=strlen(buff);
+nlen=strlen(expr);
+for(i=blen,j=endpos+1;j<nlen;i++,j++)
+buff[i]=expr[j];
+buff[i]='\0';
+blen=strlen(buff);
+if(end!=start) end-=(nlen-blen);
+strcpy(expr,buff);
+tmpno++;
+ptr=start;
+}
+}
+}
+}
+void main()
+{
+int expptr,explen,close,open,i;
+
+printf("Enter the Expression\n");
+gets(expr);
+for(expptr=0;expr[expptr]!='\0';expptr++)
+{
+
+if(expr[expptr]==')')
+{
+close=expptr;
+while(expptr!=0)
+{
+expptr--;
+if(expr[expptr]=='(')
+{
+open=expptr;
+compute(open,close);
+break;
+}
+}
+}
+}
+expptr=0;
+while(expr[expptr]!='=')
+expptr++;
+expptr++;
+explen=strlen(expr);
+compute(expptr,explen-1);
+printf("\n%s",expr);
+getch();
+}
+ 
+
